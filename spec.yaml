@@ -1,0 +1,101 @@
+openapi: "3.0.3"
+info:
+  title: Products
+  version: "1.0"
+  contact:
+    name: Florian Kraft
+    url: http://floriank.engineer
+    email: schnuffifk+mimicry@gmail.com
+  license:
+    name: MIT
+  description: 'A simple products API'
+servers:
+  - url: https://floriank-products.production.info
+    description: Production system, get your Swag here!
+  - url: https://floriank-products.staging.info
+    description: Staging system without billing integration
+paths:
+  '/products':
+    get:
+      summary: GET all products
+      tags:
+        - product
+        - collection
+      responses:
+        default:
+          description: OK
+          content:
+            application/json:
+              schema:
+                allOf:
+                - $ref: '#/components/schemas/Product'
+              examples:
+                products-example:
+                  $ref: '#/components/examples/my-cool-products'
+  '/products/{productId}':
+    get:
+      summary: GET product
+      tags:
+        - product
+      responses:
+        default:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotFoundError'
+      operationId: get-product
+      description: Returns all products as a collection
+    parameters: []
+components:
+  schemas:
+    Product:
+      title: A product
+      description: Represents a single, really cool product
+      type: object
+      x-examples:
+        - productId: foobar
+          name: A foobar product!
+          dimensions:
+            height: 23
+            width: 8
+            depth: 12
+    NotFoundError:
+      title: An error when something cannot be found
+      description: Represents a NotFound error
+      type: object
+      x-examples:
+        - message: Not found!
+          error_code: 131
+
+  examples:
+    my-cool-product:
+      summary: A really cool product
+      value:
+        productId: foobar
+        name: CoolProduct
+        dimension:
+          height: 23
+          width: 8
+          depth: 12
+    my-cool-products:
+      summary: A set of really cool products
+      value:
+        - productId: foobar
+          name: CoolProduct
+          dimension:
+            height: 23
+            width: 8
+            depth: 12
+        - productId: foobaz
+          name: CoolProduct 2
+          dimension:
+            height: 23
+            width: 8
+            depth: 12
